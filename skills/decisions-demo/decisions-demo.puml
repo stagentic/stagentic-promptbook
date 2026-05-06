@@ -1,0 +1,32 @@
+@startuml
+title decisions-demo: pick one when you can't decide
+
+|Session Agent|
+start
+
+:**Ask**: "What are you choosing between?
+List 2 to 5 options, one per line."; <<output>>
+
+|User|
+:Provide options;
+
+|Session Agent|
+:**Input**:
+  ↳ options
+; <<input>>
+
+if (only one option provided?) then (yes)
+  :**Inform**: "Looks like you only gave me one option.
+  The decision is already made."; <<output>>
+else (no)
+  :**Cue**: [[weigh-options.puml weigh-options]] with options
+    ↳ chosen-option,
+    ↳ reasoning
+  ; <<procedure>>
+
+  :**Inform**: "I'd go with: {chosen-option}.
+  ({reasoning})"; <<output>>
+endif
+
+stop
+@enduml

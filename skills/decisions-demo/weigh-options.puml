@@ -1,0 +1,33 @@
+@startuml
+title weigh-options: pick one of a list of options
+
+|Session Agent|
+start
+
+:**Cue**: [[direction/prompts.md#cue-questions questions]]
+  ↳ questions
+; <<procedure>>
+
+while (more questions to ask?) is (yes)
+  |Session Agent|
+  :**Ask**: next question from questions; <<output>>
+  |User|
+  :Answer the question;
+  |Session Agent|
+  :**Input**:
+    ↳ append answer to answers
+  ; <<input>>
+endwhile (no)
+
+:**Cue**: [[direction/prompts.md#cue-weigh weigh]]
+with options and answers
+  ↳ chosen-option,
+  ↳ reasoning
+; <<procedure>>
+
+:return:
+  ↳ chosen-option,
+  ↳ reasoning
+;
+end
+@enduml
