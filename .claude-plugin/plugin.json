@@ -1,0 +1,13 @@
+{
+  "name": "stagentic-promptbook",
+  "description": "Enabling PlantUML defined Claude Code Skills",
+  "version": "0.1.0",
+  "author": {
+    "name": "Antony Marcano",
+    "email": "antony@riverglide.com"
+  },
+  "homepage": "https://github.com/stagentic/stagentic-promptbook",
+  "repository": "https://github.com/stagentic/stagentic-promptbook",
+  "license": "MIT",
+  "keywords": ["plantuml", "skills", "agentic", "workflow", "stagentic"]
+}
