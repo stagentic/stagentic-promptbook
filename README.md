@@ -12,9 +12,14 @@ In theatre, a **promptbook** is the stage manager's master copy of a play: the f
 
 ## Install
 
-```bash
-claude plugin install https://github.com/stagentic/stagentic-promptbook
+In Claude Code, add the stagentic marketplace and install the plugin:
+
 ```
+/plugin marketplace add stagentic/stagentic-cc-marketplace
+/plugin install stagentic-promptbook@stagentic
+```
+
+The first command is a one-time setup — once added, you can install any plugin from the [stagentic family](#the-stagentic-family) without re-adding the marketplace.
 
 ## Tested with
 
