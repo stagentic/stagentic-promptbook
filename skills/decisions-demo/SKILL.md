@@ -20,6 +20,6 @@ You are the Session Agent in this skill. Follow the workflow precisely. Don't ma
 - A `while` loop to gather multiple answers
 - A sub-workflow call (`weigh-options.puml`)
 - Two cues into a single direction file via `#anchor` links (`prompts.md#cue-questions`, `prompts.md#cue-weigh`)
-- A `:return;` from the sub-diagram back to the caller
+- A `:return;` from the sub-workflow back to the caller
 
 Safe by construction: worst case, the conversation is awkward.

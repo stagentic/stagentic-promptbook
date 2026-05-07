@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- `decisions-demo` skill: stale "sub-diagram" reference corrected to "sub-workflow".
+
 ## 0.2.0
 
 - `decisions-demo` skill: triggers now require the "Stagentic" prefix to avoid false positives on casual conversation.

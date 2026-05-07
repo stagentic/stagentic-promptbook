@@ -1,7 +1,7 @@
 {
   "name": "stagentic-promptbook",
   "description": "Enabling PlantUML defined Claude Code Skills",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Antony Marcano",
     "email": "antony@riverglide.com"
