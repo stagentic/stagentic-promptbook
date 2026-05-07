@@ -5,11 +5,11 @@ description: PlantUML activity diagram interpreter for stagentic-promptbook skil
 
 # Interpreter
 
-## Diagram constructs
+## Workflow constructs
 
 - **Swimlanes** — `|Lane|` markers. Lanes: `Session Agent` (execute), `User` (pause for input or output).
-- **Activities** — `:text;` form. Text may span multiple lines. `↳ name` captures a named value from the activity's result for use in later steps. Multiple captures: `↳ a, ↳ b`. For long capture lists, each `↳` may sit on its own line for readability. In a sub-diagram call, `↳ name` captures the value returned by that diagram's `:return;`.
-- **Links** — `[[file.md slug]]` or `[[file.md#anchor slug]]` inside an activity. A `.puml` link is a sub-diagram call. Link paths are relative to the skill's base directory and are authoritative — read the file directly at that path. Do not search for it.
+- **Activities** — `:text;` form. Text may span multiple lines. `↳ name` captures a named value from the activity's result for use in later steps. Multiple captures: `↳ a, ↳ b`. For long capture lists, each `↳` may sit on its own line for readability. In a sub-workflow call, `↳ name` captures the value returned by that workflow's `:return;`.
+- **Links** — `[[file.md slug]]` or `[[file.md#anchor slug]]` inside an activity. A `.puml` link is a sub-workflow call. Link paths are relative to the skill's base directory and are authoritative — read the file directly at that path. Do not search for it.
 - **Control flow** — `start`, `stop`, `end`, `if/else/endif`, `while/endwhile`, `break`, `fork/end fork`, `detach`.
 - **Notes** and **stereotypes** (`<<...>>`) — visual only. Ignore them.
 
@@ -26,7 +26,7 @@ For each activity in the `User` swimlane — pause for input or present output a
 
 | Keyword | Meaning |
 |---|---|
-| `**Cue**:` | Delegate to a direction file or sub-diagram via the link that follows |
+| `**Cue**:` | Delegate to a direction file or sub-workflow via the link that follows |
 | `**Run**:` | Execute the shell command provided between backticks. Commands are literal and authoritative — run exactly as written once any substitutions have taken place (e.g. if placeholder `<command>` has been assigned the value `foo`, `` `which <command>` `` executes as `which foo`). If a command is unknown or fails, that is an authorship error — report it and stop. |
 | `**Find**:` | Locate the named resource (file, path) and capture the result |
 | `**Inform**:` | Emit output to the user; no response expected. When followed by a backtick command, the command runs per `**Run**:` and the Session Agent emits the captured stdout to the user as its own message text — the tool's own output rendering does not count, since the host UI may collapse or truncate it. |
@@ -37,13 +37,13 @@ For each activity in the `User` swimlane — pause for input or present output a
 ## Terminators
 
 - **`stop`** — halt immediately. Do not return to any call site.
-- **`end`** — complete this diagram. If called as a sub-diagram, return to the call site.
+- **`end`** — complete this workflow. If called as a sub-workflow, return to the call site.
 - **`:return;`** — placed before `end` to declare return value(s) to the caller.
 - **`detach`** — terminate this branch without joining.
 
-## Sub-diagrams
+## Sub-workflows
 
-A `[[*.puml slug]]` link is a sub-diagram call. Terminator semantics apply at any nesting depth.
+A `[[*.puml slug]]` link is a sub-workflow call. Terminator semantics apply at any nesting depth.
 
 ## Decisions, loops, and forks
 
@@ -57,4 +57,4 @@ Apply standard pause gates from the host project's `AGENTS.md` / `CLAUDE.md` unl
 
 ## On failure
 
-Stop and report. Any failure is an error in the diagram or its referenced files — do not repair, retry, or work around unless the linked direction file explicitly directs you to.
+Stop and report. Any failure is an error in the workflow or its referenced files — do not repair, retry, or work around unless the linked direction file explicitly directs you to.
