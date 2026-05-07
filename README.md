@@ -54,6 +54,16 @@ Now, install the plugin:
 
 From here, [write your own Promptbook workflow](#writing-your-own-promptbook-based-skill) or try the demo first.
 
+## Upgrading
+
+To update to a newer version:
+
+1. Open the plugin manager with `/plugin`.
+2. Navigate to the **Installed** tab.
+3. Select `stagentic-promptbook`.
+4. Select **Update now**.
+5. Run `/reload-plugins` to apply the update to the current session.
+
 ## Bundled skill: `decisions-demo`
 
 This skill helps the user pick between 2–5 options when trying to make a decision. Pure conversation — no files touched, no shell, no network.
