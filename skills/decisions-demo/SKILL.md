@@ -1,7 +1,6 @@
 ---
 name: decisions-demo
 description: A small demo of the stagentic-promptbook interpreter — helps the user pick between a few options when they can't decide. Trigger on "help me pick", "decide for me", or "pick one".
-interpreter: stagentic-promptbook
 ---
 
 # Decisions Demo
@@ -9,7 +8,7 @@ interpreter: stagentic-promptbook
 A tiny decision-helper skill that demonstrates the [interpreter](../interpreter/SKILL.md) end-to-end. Pure conversation: no files touched, no shell, no network.
 
 1. Load the `stagentic-promptbook:interpreter` skill.
-2. Follow the diagram in [decisions-demo.puml](decisions-demo.puml).
+2. Follow the workflow in [decisions-demo.puml](decisions-demo.puml).
 
 You are the Session Agent in this skill. Follow the diagram precisely. Don't make decisions for the user beyond what the diagram and direction files instruct.
 

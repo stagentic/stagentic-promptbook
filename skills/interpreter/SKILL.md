@@ -1,6 +1,6 @@
 ---
 name: interpreter
-description: PlantUML activity diagram interpreter for stagentic-promptbook skills. Loaded by skills that either (a) explicitly instruct `Load the stagentic-promptbook:interpreter skill` in their body, or (b) declare `interpreter: stagentic-promptbook` in their frontmatter. Not a general PlantUML interpreter — defines the stagentic-promptbook keyword set.
+description: PlantUML activity diagram interpreter for stagentic-promptbook skills. Loaded by skills that include `Load the stagentic-promptbook:interpreter skill` in their body. Not a general PlantUML interpreter — defines the stagentic-promptbook keyword set.
 ---
 
 # Interpreter

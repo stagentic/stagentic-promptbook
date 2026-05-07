@@ -115,19 +115,15 @@ In `SKILL.md`:
 ---
 name: your-skill
 description: ...
-interpreter: stagentic-promptbook
 ---
 
 # Your Skill
 
 1. Load the `stagentic-promptbook:interpreter` skill.
-2. Follow the diagram in [your-skill.puml](your-skill.puml).
+2. Follow the workflow in [your-skill.puml](your-skill.puml).
 ```
 
-Two ways to get your skills to leverage this plugin:
-
-- **Frontmatter declaration**: `interpreter: stagentic-promptbook`. A convention that signals which keyword vocabulary the skill expects. Useful for human readers, future validators, and coexisting cleanly with other PlantUML interpreters that may emerge.
-- **Body instruction**: `Load the stagentic-promptbook:interpreter skill` (fully qualified). This is the actual runtime hook — it tells Claude Code to load the interpreter before traversing the diagram.
+The body instruction `Load the stagentic-promptbook:interpreter skill` is the runtime hook — it tells Claude Code to load the interpreter before traversing the workflow. Use the fully qualified name so the plugin's interpreter is unambiguously identified, even if other PlantUML interpreters are present.
 
 The diagram is the workflow. Direction files hold any prose that the diagram cues into. See [`skills/decisions-demo/`](skills/decisions-demo/) for a complete working example.
 
