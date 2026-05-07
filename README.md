@@ -1,29 +1,18 @@
-# Stagentic Promptbook (status: prototype)
+# Stagentic Promptbook
 
-A Claude Code plugin that brings PlantUML activity diagrams to skill workflows. Part of the [stagentic](#the-stagentic-family) family.
+> **Status: prototype.** This is the experimental version of stagentic-promptbook.
+>
+> Keyword semantics may change before a stable release. Feedback via Issues is gold, pull-requests are platinum!
 
-**Stagentic** — *stage + agentic* — is a family of tools by [Antony Marcano](#maintained-by) for auditioning agentic skills with automated rehearsals ([read the stagentic backstory here](https://open.substack.com/pub/antonymarcano/p/taming-claude-code-one-agentic-test)).
+A Claude Code plugin that brings [PlantUML activity diagrams](https://plantuml.com/activity-diagram-beta) to skill workflows. Part of the [Stagentic](#the-stagentic-family) family.
+
+**Stagentic** — *stage + agentic* — is a family of tools by [Antony Marcano](#maintained-by) for auditioning agentic skills with automated rehearsals ([read the backstory here](https://open.substack.com/pub/antonymarcano/p/taming-claude-code-one-agentic-test)).
 
 In theatre, a **promptbook** is the stage manager's master copy of a play: the full script alongside every cue (light, sound, scene-change, actor entrance), plus blocking, props lists, and timings. It's the operational source of truth for putting on the show — anyone who can read a promptbook can run the production from it.
 
-`stagentic-promptbook` brings the same idea to Claude Code skills: a skill's workflow is expressed as a PlantUML activity diagram, and Claude Code follows it the way a stage manager runs a show — calling each cue in turn, branching where the diagram branches.
-
-> **Status: prototype.** This is the experimental version of stagentic-promptbook. Keyword semantics may change before a stable release. Feedback via Issues is gold, pull-requests are platinum!
-
-## Install
-
-In Claude Code, add the stagentic marketplace and install the plugin:
-
-```
-/plugin marketplace add stagentic/stagentic-cc-marketplace
-/plugin install stagentic-promptbook@stagentic
-```
-
-The first command is a one-time setup — once added, you can install any plugin from the [stagentic family](#the-stagentic-family) without re-adding the marketplace.
-
-## Tested with
-
-This plugin has been used in development with both Claude Sonnet 4.6 and Claude Opus 4.7. Sonnet currently produces the most consistent results when following the diagram — more empirical data to follow.
+`stagentic-promptbook` brings the same idea to Claude Code skills: 
+- A skill's workflow is expressed as a PlantUML activity diagram infused with a lightweight DSL. 
+- An interpreter skill allows Claude Code to follow the Promptbook-infused PlantUML the way a stage manager runs a show — calling each cue in turn, branching where the diagram branches.
 
 ## What's in the box
 
@@ -31,15 +20,45 @@ Two skills, both namespaced under `/stagentic-promptbook:`.
 
 ### `interpreter`
 
-The reference that lets Claude Code follow a PlantUML activity diagram as if it were the body of a skill. Defines the keyword vocabulary (`**Cue**:`, `**Run**:`, `**Await**:`, `**Inform**:`, `**Ask**:`, `**Input**:`, `**Find**:`) and the diagram constructs (swimlanes, decisions, loops, forks, sub-diagram calls, terminators).
+The reference that lets Claude Code follow a PlantUML activity diagram that contains Promptbook keywords, as if it were the body of a skill. 
 
-Loaded automatically by any other PlantUML-based skill that references it. Rarely invoked on its own.
+Keyword vocabulary includes (`**Cue**:`, `**Run**:`, `**Await**:`, `**Inform**:`, `**Ask**:`, `**Input**:`, `**Find**:`) and the diagram constructs (swimlanes, decisions, loops, forks, sub-diagram calls, terminators).
+
+For more, [see the interpreter here](skills/interpreter/SKILL.md).
 
 ### `decisions-demo`
 
-A small, working example skill that uses the interpreter end-to-end. Helps the user pick between 2–5 options when they can't decide. Pure conversation — no files touched, no shell, no network.
+A small, working example skill that uses the interpreter end-to-end.
 
-Triggers on *"help me pick"*, *"decide for me"*, or *"pick one"*.
+See [Bundled skill: `decisions-demo`](#bundled-skill-decisions-demo) for more.
+
+## Tested with
+
+This plugin has been used in development with both Claude Sonnet 4.6 and Claude Opus 4.7. 
+
+Sonnet currently produces the most consistent results when following the diagram — more empirical data to follow.
+
+## Install
+
+In Claude Code, if the Stagentic marketplace isn't yet added, add it first:
+
+```
+/plugin marketplace add stagentic/stagentic-cc-marketplace
+```
+That is a one-time setup. Any plugin from the [Stagentic family](#the-stagentic-family) can then be installed without re-adding the marketplace.
+
+Now, install the plugin:
+```
+/plugin install stagentic-promptbook@stagentic
+```
+
+From here, [write your own Promptbook workflow](#writing-your-own-promptbook-based-skill) or try the demo first.
+
+## Bundled skill: `decisions-demo`
+
+This skill helps the user pick between 2–5 options when trying to make a decision. Pure conversation — no files touched, no shell, no network.
+
+Triggers on *"Stagentic, help me pick"*, *"Stagentic, decide for me"*, or *"Stagentic, pick one"*.
 
 It demonstrates:
 
@@ -51,9 +70,13 @@ It demonstrates:
 - Two cues into a single direction file via `#anchor` links
 - A `:return;` from the sub-diagram back to the caller
 
-#### What the diagram looks like
+### What the diagram looks like
 
-Source — the decision-logic sub-diagram (`weigh-options.puml`) that asks three questions in a loop and weighs the answers:
+Source — the decision-logic sub-diagram (`weigh-options.puml`) that asks three questions in a loop and weighs the answers.
+
+The demo uses [Specification & Definition Language (SDL)](https://plantuml.com/activity-diagram-beta#bdd3477f7d5f24c6) notation.
+
+The SDL notation stereotypes such as `<<procedure>>`, `<<input>>`, `<<output>>` are for human readability only. They play no part in how the flow is interpreted (yet).
 
 ```plantuml
 @startuml
@@ -97,13 +120,13 @@ Rendered:
 
 Read the source under [`skills/decisions-demo/`](skills/decisions-demo/) to see how a PlantUML-based skill is structured end-to-end.
 
-## Writing your own PlantUML-based skill
+## Writing your own Promptbook-based skill
 
 Minimum layout:
 
 ```
 your-skill/
-├── SKILL.md            # frontmatter + "Load the interpreter, follow the diagram"
+├── SKILL.md            # frontmatter + directive to load the interpreter
 ├── your-skill.puml     # the activity diagram
 └── direction/          # optional — direction files cued from the diagram
     └── ...
@@ -125,7 +148,11 @@ description: ...
 
 The body instruction `Load the stagentic-promptbook:interpreter skill` is the runtime hook — it tells Claude Code to load the interpreter before traversing the workflow. Use the fully qualified name so the plugin's interpreter is unambiguously identified, even if other PlantUML interpreters are present.
 
-The diagram is the workflow. Direction files hold any prose that the diagram cues into. See [`skills/decisions-demo/`](skills/decisions-demo/) for a complete working example.
+The diagram is the workflow. Free-text works in activities, but Promptbook's DSL produces more concise, reliable workflows (see the [interpreter skill file](skills/interpreter/SKILL.md) for keywords and what they do).
+
+Promptbook workflows can **Cue** other Promptbook workflows, or prose-based direction files.
+
+Direction files hold any prose that the diagram cues into. See [`skills/decisions-demo/`](skills/decisions-demo/) for a complete working example.
 
 ## Roadmap
 
@@ -147,17 +174,17 @@ Find Antony here: **[Substack](https://antonymarcano.substack.com) · [LinkedIn]
 
 The Stagentic family of free and open-source tools is a labour of love. Two ways to help it grow:
 
-- A paid subscription to [my Substack](https://antonymarcano.substack.com) — supports the writing and thinking that feeds the tools.
+- A paid subscription to [Antony's Substack](https://antonymarcano.substack.com) — supports the writing and thinking that feeds the tools.
 - Sponsorship enquiries via [LinkedIn](https://www.linkedin.com/in/antonymarcano/).
 
 ## Acknowledgements
 
-> Some of the inspiration for this work came from my brother, **[Raymond Rodriguez](https://www.linkedin.com/in/raymond-rodriguez-3042a532/)**. In early 2025 he built a programming-language-style DSL for his ChatGPT custom GPTs and showed me how much more reliably they ran when their instructions could be treated as code rather than prose. We talked it over many times after that. I couldn't see how to make this accessible to a wider audience, until one day I was making PlantUML diagrams to explain how my tooling worked. That's when those conversations clicked — leading to stagentic-promptbook.
+> "Some of the inspiration for this work came from my brother, **[Raymond Rodriguez](https://www.linkedin.com/in/raymond-rodriguez-3042a532/)**. In early 2025 he built a programming-language-style DSL for his ChatGPT custom GPTs and showed me how much more reliably they ran when their instructions could be treated as code rather than prose. We talked it over many times after that. I couldn't see how to make this accessible to a wider audience, until one day I was making PlantUML diagrams to explain how my tooling worked. That's when those conversations clicked — leading to stagentic-promptbook."
 >
 > *— Antony Marcano*
 
-## The stagentic family
+## The Stagentic family
 
-- [`stagentic-promptbook`](https://github.com/stagentic/stagentic-promptbook) — this plugin.
-- [`stagentic-flow`](https://github.com/stagentic/stagentic-flow) — TDAB runner framework (in development).
-- [`stagentic-tdd`](https://github.com/stagentic/stagentic-tdd) — TDD support skill (in development).
+- `stagentic-promptbook` — this plugin.
+- `stagentic-flow` — TDAB runner framework (in development).
+- `stagentic-tdd` — TDD support skill (in development).
