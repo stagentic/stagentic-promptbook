@@ -108,6 +108,8 @@ Both skills share an entry point with preflight checks that branches to either a
 
 Subagents are launched in parallel but their *work* runs serially via Stage Director **baton-passing** (each subagent waits for `GO` from the director before doing its work, signals `done`, and the next gets the baton). A scenario may also include **inline** steps executed by the Session Agent itself rather than a subagent — for example, the scorecard evaluation that runs after the four subagent steps complete.
 
+The following diagram shows how the runner executes the workflow in conjunction with a background process, the Stage Director, and the spawned subagents (purely illustrative):
+
 ![TDAB runner: Session Agent launches subagents in parallel; Stage Director passes the baton serially; Session Agent runs an inline scorecard step before emitting PASS/FAIL.](assets/runner-flow.png)
 
 **tdab-run** and **tdab-play** are two implementations of this same responsibility. They consume the same scenario files, drive the same Stage Director, and emit the same result format. They differ only in how the runner's workflow is *encoded inside the skill*:
