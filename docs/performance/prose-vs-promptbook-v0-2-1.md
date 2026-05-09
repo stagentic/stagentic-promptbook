@@ -102,6 +102,10 @@ Both skills are runners for **Test-Driven Agentic Behaviour (TDAB)** — a Test-
 
 The runner's responsibility is to parse the scenario, launch each step as a parallel background agent, coordinate sequencing between them via an out-of-process intermediary (the Stage Director), capture transcripts and timings, and report PASS/FAIL (these timings are what the speed analysis later uses).
 
+Both skills share an entry point with preflight checks that branches to either a suite-run path or a single-test path. The dataset in this analysis exercised the single-test path on every run; the diagram below shows that path.
+
+![Single-test path: init-scenario, cue rehearsal (subagent steps) and transcriber, await completion, run inline post-steps, emit PASS/FAIL.](assets/single-test-run.png)
+
 Subagents are launched in parallel but their *work* runs serially via Stage Director **baton-passing** (each subagent waits for `GO` from the director before doing its work, signals `done`, and the next gets the baton). A scenario may also include **inline** steps executed by the Session Agent itself rather than a subagent — for example, the scorecard evaluation that runs after the four subagent steps complete.
 
 ![TDAB runner: Session Agent launches subagents in parallel; Stage Director passes the baton serially; Session Agent runs an inline scorecard step before emitting PASS/FAIL.](assets/runner-flow.png)
