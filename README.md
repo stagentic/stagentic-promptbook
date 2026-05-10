@@ -10,8 +10,8 @@ A Claude Code plugin that brings [PlantUML activity diagrams](https://plantuml.c
 
 In theatre, a **promptbook** is the stage manager's master copy of a play: the full script alongside every cue (light, sound, scene-change, actor entrance), plus blocking, props lists, and timings. It's the operational source of truth for putting on the show — anyone who can read a promptbook can run the production from it.
 
-`stagentic-promptbook` brings the same idea to Claude Code skills: 
-- A skill's workflow is expressed as a PlantUML activity diagram infused with a lightweight DSL. 
+`stagentic-promptbook` brings the same idea to Claude Code skills:
+- A skill's workflow is expressed as a PlantUML activity diagram infused with a lightweight DSL.
 - An interpreter skill allows Claude Code to follow the Promptbook-infused PlantUML the way a stage manager runs a show — calling each cue in turn, branching where the diagram branches.
 
 ## What's in the box
@@ -20,7 +20,7 @@ Two skills, both namespaced under `/stagentic-promptbook:`.
 
 ### `interpreter`
 
-The reference that lets Claude Code follow a PlantUML activity diagram that contains Promptbook keywords, as if it were the body of a skill. 
+The skill that lets Claude Code follow a PlantUML activity diagram that contains Promptbook keywords, as if it were the body of a skill.
 
 Keyword vocabulary includes (`**Cue**:`, `**Run**:`, `**Await**:`, `**Inform**:`, `**Ask**:`, `**Input**:`, `**Find**:`) and the diagram constructs (swimlanes, decisions, loops, forks, sub-diagram calls, terminators).
 
@@ -30,13 +30,23 @@ For more, [see the interpreter here](skills/interpreter/SKILL.md).
 
 A small, working example skill that uses the interpreter end-to-end.
 
-See [Bundled skill: `decisions-demo`](#bundled-skill-decisions-demo) for more.
+See [decisions-demo walkthrough](docs/decisions-demo.md) for more.
 
 ## Tested with
 
-This plugin has been used in development with both Claude Sonnet 4.6 and Claude Opus 4.7. 
+| Model | ID | Consistency |
+|---|---|---|
+| Opus 4.7 | `claude-opus-4-7` | ●●●○ |
+| Sonnet 4.6 | `claude-sonnet-4-6` | ●●●● |
+| Haiku 4.5 | `claude-haiku-4-5-20251001` | ●○○○ |
 
-Sonnet currently produces the most consistent results when following the diagram — more empirical data to follow.
+## Tokens and speed
+
+This is a v0 prototype — no optimisation has been attempted. Overhead scales with the number of files a Promptbook skill fans out across; more `.puml` and `direction` files will carry a higher cold-run (pre-cached) premium.
+
+Once cached, speed is equivalent to prose — with signs it can be marginally faster.
+
+For more detail, see: [Prose vs Promptbook — preliminary analysis](docs/performance/prose-vs-promptbook-v0-2-1.md)
 
 ## Install
 
@@ -66,69 +76,9 @@ To update to a newer version:
 
 ## Bundled skill: `decisions-demo`
 
-This skill helps the user pick between 2–5 options when trying to make a decision. Pure conversation — no files touched, no shell, no network.
+A small, working example skill that uses the interpreter end-to-end — helps the user pick between options when they can't decide.
 
-Triggers on *"Stagentic, help me pick"*, *"Stagentic, decide for me"*, or *"Stagentic, pick one"*.
-
-It demonstrates:
-
-- `|Session Agent|` and `|User|` swimlanes
-- `**Ask**`, `**Input**`, `**Cue**`, `**Inform**` keywords
-- A decision (`if/else/endif`) for an edge case
-- A `while` loop to gather multiple answers
-- A sub-diagram call (`weigh-options.puml`)
-- Two cues into a single direction file via `#anchor` links
-- A `:return;` from the sub-diagram back to the caller
-
-### What the diagram looks like
-
-Source — the decision-logic sub-diagram (`weigh-options.puml`) that asks three questions in a loop and weighs the answers.
-
-The demo uses [Specification & Definition Language (SDL)](https://plantuml.com/activity-diagram-beta#bdd3477f7d5f24c6) notation.
-
-The SDL notation stereotypes such as `<<procedure>>`, `<<input>>`, `<<output>>` are for human readability only. They play no part in how the flow is interpreted (yet).
-
-```plantuml
-@startuml
-title weigh-options: pick one of a list of options
-
-|Session Agent|
-start
-
-:**Cue**: [[direction/prompts.md#cue-questions questions]]
-  ↳ questions
-; <<procedure>>
-
-while (more questions to ask?) is (yes)
-  |Session Agent|
-  :**Ask**: next question from questions; <<output>>
-  |User|
-  :Answer the question;
-  |Session Agent|
-  :**Input**:
-    ↳ append answer to answers
-  ; <<input>>
-endwhile (no)
-
-:**Cue**: [[direction/prompts.md#cue-weigh weigh]]
-with options and answers
-  ↳ chosen-option,
-  ↳ reasoning
-; <<procedure>>
-
-:return:
-  ↳ chosen-option,
-  ↳ reasoning
-;
-end
-@enduml
-```
-
-Rendered:
-
-![weigh-options sub-diagram of the decisions-demo skill](images/weigh-options.png)
-
-Read the source under [`skills/decisions-demo/`](skills/decisions-demo/) to see how a PlantUML-based skill is structured end-to-end.
+See [decisions-demo walkthrough](docs/decisions-demo.md) for triggers, a feature tour, and the diagram source.
 
 ## Writing your own Promptbook-based skill
 
