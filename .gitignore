@@ -20,8 +20,9 @@ plantuml.jar
 .env.local
 .env.*.local
 
-# Common build outputs and dependencies
+# Build outputs and dependencies
 node_modules/
 dist/
 build/
 *.log
+*-spec-artefacts/
